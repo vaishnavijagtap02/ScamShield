@@ -33,7 +33,7 @@ Each task: read the linked docs → (tests first for logic) → implement → `d
   `curl -s https://api.sarvam.ai/speech-to-text -H "api-subscription-key: $SARVAM_API_KEY" -F file=@assets/demo/scam_cbi.wav -F model=saaras:v3 -F mode=codemix -F language_code=unknown -F with_timestamps=true` (use a ≤ 25 s clip).
   Save it to `test/fixtures/sarvam_sample.json`, then implement the parser for that real shape.
   *AC:* tests with `package:http/testing.dart` `MockClient`: timestamps present → multiple segments with offsets; `timestamps: null` → one segment; 500 → 1 retry then `SttException`; 401 → no retry.
-- [ ] **T09 LlmService (OpenAI-compatible).** Prompt builder (RISK_ENGINE §6; transcript inside `<<<TRANSCRIPT … TRANSCRIPT>>>` in the USER message), fence stripping, tolerant parsing, retry without `response_format` on 400.
+- [x] **T09 LlmService (OpenAI-compatible).** Prompt builder (RISK_ENGINE §6; transcript inside `<<<TRANSCRIPT … TRANSCRIPT>>>` in the USER message), fence stripping, tolerant parsing, retry without `response_format` on 400.
   *AC:* MockClient tests: valid JSON → `LlmAnalysis`; fenced JSON parses; one malformed event is dropped and the rest are kept; timeout → `LlmException`. A test asserts the system prompt contains no transcript text.
 - [ ] **T10 TelegramAlertService + GuardianStore.** Pairing code gen, deep link, `getUpdates` polling with offset, `sendMessage` (no `parse_mode`), and the alert text builder (max 3 quotes, ≤ 700 chars).
   *AC:* MockClient tests: `/start <code>` found → Guardian saved; wrong code ignored; send to 2 guardians, one fails → per-guardian results.

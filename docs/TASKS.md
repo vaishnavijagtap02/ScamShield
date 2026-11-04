@@ -25,7 +25,7 @@ Each task: read the linked docs → (tests first for logic) → implement → `d
   *AC:* all 6 vectors (lexicon + grounded LLM) give the exact score/level/stages. The lexicon-only vectors from TESTING.md §3 pass. Unit tests for each hard rule and the live-mode monotonic flag.
 - [x] **T06 WAV utils.** `WavHeader.parse` (finds the `fmt ` and `data` chunks, rejects non-PCM16/non-mono/non-16 kHz with `AudioFormatException`), `WavSplitter.split(bytes, 25s)` → `AudioChunk`s with correct `startSec`, and `wavFromPcm16`.
   *AC:* tests build a synthetic 61 s WAV in memory → 3 chunks (25, 25, 11 s). Each chunk re-parses as a valid WAV. A header with an extra `LIST` chunk still parses.
-- [ ] **T07 ActionPlanService + ComplaintService.** Parse `assets/action_plan.json` (pass the JSON string in), `planFor(Answers, RiskLevel)`, and `ComplaintService.build(verdict, answers, now)` per the template in TESTING.md §4.
+- [x] **T07 ActionPlanService + ComplaintService.** Parse `assets/action_plan.json` (pass the JSON string in), `planFor(Answers, RiskLevel)`, and `ComplaintService.build(verdict, answers, now)` per the template in TESTING.md §4.
   *AC:* `paid` → the urgent 1930 rule first. All "no" + MEDIUM/HIGH → the `none` rule. All "no" + LOW → `low_safe`. HIGH → the `alert_family` action is present (added if missing). The JSON's `note` field describes these matching rules. The complaint for `scam_cbi` contains "CBI", "Inspector Sharma", ≥ 4 timed quotes, `______` for unknowns, and NOT the rejected phone.
 
 ## Phase 2 — Services + sources (~1:50–3:00)

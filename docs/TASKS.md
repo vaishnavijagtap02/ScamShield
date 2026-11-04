@@ -29,7 +29,7 @@ Each task: read the linked docs → (tests first for logic) → implement → `d
   *AC:* `paid` → the urgent 1930 rule first. All "no" + MEDIUM/HIGH → the `none` rule. All "no" + LOW → `low_safe`. HIGH → the `alert_family` action is present (added if missing). The JSON's `note` field describes these matching rules. The complaint for `scam_cbi` contains "CBI", "Inspector Sharma", ≥ 4 timed quotes, `______` for unknowns, and NOT the rejected phone.
 
 ## Phase 2 — Services + sources (~1:50–3:00)
-- [ ] **T08 SarvamSttService.** Per ARCHITECTURE §5.1. First ask the human to run this in their own terminal and paste the response (you never read `.env`):
+- [x] **T08 SarvamSttService.** Per ARCHITECTURE §5.1. First ask the human to run this in their own terminal and paste the response (you never read `.env`):
   `curl -s https://api.sarvam.ai/speech-to-text -H "api-subscription-key: $SARVAM_API_KEY" -F file=@assets/demo/scam_cbi.wav -F model=saaras:v3 -F mode=codemix -F language_code=unknown -F with_timestamps=true` (use a ≤ 25 s clip).
   Save it to `test/fixtures/sarvam_sample.json`, then implement the parser for that real shape.
   *AC:* tests with `package:http/testing.dart` `MockClient`: timestamps present → multiple segments with offsets; `timestamps: null` → one segment; 500 → 1 retry then `SttException`; 401 → no retry.

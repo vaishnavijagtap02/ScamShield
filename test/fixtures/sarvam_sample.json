@@ -1,0 +1,14 @@
+{
+  "_synthetic": true,
+  "request_id": "req_mock_12345",
+  "transcript": "Hello, this is Inspector Sharma from CBI. A parcel has arrived in your name.",
+  "language_code": "hi-IN",
+  "timestamps": {
+    "words": [
+      "Hello, this is Inspector Sharma from CBI.",
+      "A parcel has arrived in your name."
+    ],
+    "start_time_seconds": [0.0, 3.2],
+    "end_time_seconds": [3.1, 5.9]
+  }
+}

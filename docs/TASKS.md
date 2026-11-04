@@ -35,7 +35,7 @@ Each task: read the linked docs → (tests first for logic) → implement → `d
   *AC:* tests with `package:http/testing.dart` `MockClient`: timestamps present → multiple segments with offsets; `timestamps: null` → one segment; 500 → 1 retry then `SttException`; 401 → no retry.
 - [x] **T09 LlmService (OpenAI-compatible).** Prompt builder (RISK_ENGINE §6; transcript inside `<<<TRANSCRIPT … TRANSCRIPT>>>` in the USER message), fence stripping, tolerant parsing, retry without `response_format` on 400.
   *AC:* MockClient tests: valid JSON → `LlmAnalysis`; fenced JSON parses; one malformed event is dropped and the rest are kept; timeout → `LlmException`. A test asserts the system prompt contains no transcript text.
-- [ ] **T10 TelegramAlertService + GuardianStore.** Pairing code gen, deep link, `getUpdates` polling with offset, `sendMessage` (no `parse_mode`), and the alert text builder (max 3 quotes, ≤ 700 chars).
+- [x] **T10 TelegramAlertService + GuardianStore.** Pairing code gen, deep link, `getUpdates` polling with offset, `sendMessage` (no `parse_mode`), and the alert text builder (max 3 quotes, ≤ 700 chars).
   *AC:* MockClient tests: `/start <code>` found → Guardian saved; wrong code ignored; send to 2 guardians, one fails → per-guardian results.
 - [ ] **T11 Sources.** `UploadSource` (WAV → split; MP3/M4A/OGG ≤ 30 s → a single chunk, passed as-is with the original filename; longer → `AudioFormatException`), `DemoSource` (emits segments every 1.2 s + canned LLM events; the interval is injectable for tests), `MicSource` (`record` `startStream` PCM16 16 kHz mono → 6 s chunks via `wavFromPcm16`).
   *AC:* unit tests for Upload/Demo with fake bytes and a zero interval. Mic is covered by the manual test in TESTING.md §6.

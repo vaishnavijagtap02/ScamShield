@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "note": "Used by DemoSource (offline demo) AND by tests. Segments = what STT would return. llm = canned LLM response (includes deliberate hallucinations that grounding must reject). expected = engine output after lexicon + grounded llm events. Also use the segment texts as the roleplay lines when recording demo WAVs.",
+  "scripts": [
+    {
+      "id": "scam_cbi",
+      "kind": "scam",
+      "title": "CBI digital arrest",
+      "segments": [
+        {"startSec": 0, "endSec": 6, "text": "Namaste, main CBI Mumbai se Inspector Sharma bol raha hoon."},
+        {"startSec": 6, "endSec": 12, "text": "Aapke Aadhaar se ek parcel gaya hai jisme drugs mile hain."},
+        {"startSec": 12, "endSec": 18, "text": "Aapke naam pe money laundering ka case darj hai, arrest warrant nikla hai."},
+        {"startSec": 18, "endSec": 24, "text": "Abhi verify karna padega, ek ghante mein nahi hua toh team ghar aayegi."},
+        {"startSec": 24, "endSec": 30, "text": "Ye confidential investigation hai, kisi ko mat batana, family ko bhi nahi."},
+        {"startSec": 30, "endSec": 36, "text": "Call mat kaatna aur camera on rakho."},
+        {"startSec": 36, "endSec": 42, "text": "Verification ke liye paise RBI ke safe account mein transfer karo aur OTP batao."}
+      ],
+      "llm": {
+        "scam_type": "digital_arrest",
+        "events": [
+          {"stage": "AUTHORITY", "quote": "main CBI Mumbai se Inspector Sharma bol raha hoon", "confidence": 0.95, "explanation_hi": "Caller khud ko CBI officer bata raha hai"},
+          {"stage": "FEAR", "quote": "money laundering ka case darj hai, arrest warrant nikla hai", "confidence": 0.93, "explanation_hi": "Arrest ka dar dikhaya ja raha hai"},
+          {"stage": "URGENCY", "quote": "ek ghante mein nahi hua toh team ghar aayegi", "confidence": 0.85, "explanation_hi": "Jaldi karne ka pressure"},
+          {"stage": "SECRECY", "quote": "kisi ko mat batana, family ko bhi nahi", "confidence": 0.96, "explanation_hi": "Aapko family se alag kiya ja raha hai"},
+          {"stage": "SECRECY", "quote": "apne bete ko phone mat karna", "confidence": 0.9, "explanation_hi": "HALLUCINATED - not in transcript, grounding must reject"},
+          {"stage": "EXTRACTION", "quote": "paise RBI ke safe account mein transfer karo", "confidence": 0.97, "explanation_hi": "Paise maange ja rahe hain"}
+        ],
+        "entities": {"claimed_agency": "CBI", "claimed_name": "Inspector Sharma", "case_no": null, "phones": ["9876543210"], "upi_ids": [], "accounts": [], "amount_asked": null},
+        "summary_hi": "Caller ne CBI officer ban ke arrest ki dhamki di aur paise transfer karne ko kaha. Ye digital arrest scam hai, koi asli police video call pe arrest nahi karti."
+      },
+      "expected": {"level": "high", "score": 100, "stages": ["authority", "fear", "urgency", "secrecy", "extraction"], "rejected_quotes": ["apne bete ko phone mat karna"], "rejected_phones": ["9876543210"]}
+    },
+    {
+      "id": "scam_courier",
+      "kind": "scam",
+      "title": "Courier parcel + customs",
+      "segments": [
+        {"startSec": 0, "endSec": 6, "text": "Hello, main FedEx courier se bol raha hoon, aapka ek parcel customs ne rok liya hai."},
+        {"startSec": 6, "endSec": 12, "text": "Usme paanch passport aur drugs mile hain, ye illegal hai."},
+        {"startSec": 12, "endSec": 18, "text": "Main call Mumbai Police cyber cell ko transfer kar raha hoon."},
+        {"startSec": 18, "endSec": 24, "text": "Aapko turant ek video call pe statement dena hoga."},
+        {"startSec": 24, "endSec": 30, "text": "Case clear karne ke liye 2 lakh refundable security UPI ID customs.clearance@okaxis pe bhejiye."}
+      ],
+      "llm": {
+        "scam_type": "courier_parcel",
+        "events": [
+          {"stage": "AUTHORITY", "quote": "Main call Mumbai Police cyber cell ko transfer kar raha hoon", "confidence": 0.9, "explanation_hi": "Police ke naam ka istemal"},
+          {"stage": "FEAR", "quote": "drugs mile hain, ye illegal hai", "confidence": 0.9, "explanation_hi": "Parcel mein drugs ka dar"},
+          {"stage": "URGENCY", "quote": "turant ek video call pe statement dena hoga", "confidence": 0.8, "explanation_hi": "Turant karne ka pressure"},
+          {"stage": "EXTRACTION", "quote": "2 lakh refundable security UPI ID", "confidence": 0.95, "explanation_hi": "Paise UPI se maange ja rahe hain"}
+        ],
+        "entities": {"claimed_agency": "FedEx courier", "claimed_name": null, "case_no": null, "phones": [], "upi_ids": ["customs.clearance@okaxis"], "accounts": [], "amount_asked": "2 lakh"},
+        "summary_hi": "Caller ne parcel mein drugs ka dar dikha ke 2 lakh UPI se maange. Ye courier scam hai."
+      },
+      "expected": {"level": "high", "score": 100, "stages": ["authority", "fear", "urgency", "extraction"]}
+    },
+    {
+      "id": "scam_trai",
+      "kind": "scam",
+      "title": "TRAI SIM band",
+      "segments": [
+        {"startSec": 0, "endSec": 6, "text": "Main TRAI se bol raha hoon, aapka SIM 2 ghante mein band ho jaayega."},
+        {"startSec": 6, "endSec": 12, "text": "Aapke Aadhaar se ek aur number liya gaya hai jo illegal activities mein use hua."},
+        {"startSec": 12, "endSec": 18, "text": "Aapke khilaaf FIR ho sakti hai, isliye abhi police se baat karni hogi."}
+      ],
+      "llm": {
+        "scam_type": "trai_sim",
+        "events": [
+          {"stage": "AUTHORITY", "quote": "Main TRAI se bol raha hoon", "confidence": 0.9, "explanation_hi": "TRAI ke naam ka istemal"},
+          {"stage": "URGENCY", "quote": "aapka SIM 2 ghante mein band ho jaayega", "confidence": 0.85, "explanation_hi": "Time ka pressure"},
+          {"stage": "FEAR", "quote": "Aapke khilaaf FIR ho sakti hai", "confidence": 0.9, "explanation_hi": "FIR ka dar"}
+        ],
+        "entities": {"claimed_agency": "TRAI", "claimed_name": null, "case_no": null, "phones": [], "upi_ids": [], "accounts": [], "amount_asked": null},
+        "summary_hi": "Caller TRAI ban ke SIM band aur FIR ka dar dikha raha hai. Abhi paise nahi maange, lekin ye scam ki shuruaat lagti hai."
+      },
+      "expected": {"level": "medium", "score": 59, "stages": ["authority", "fear", "urgency"]}
+    },
+    {
+      "id": "benign_bank",
+      "kind": "benign",
+      "title": "Asli bank call",
+      "segments": [
+        {"startSec": 0, "endSec": 6, "text": "Namaste, main aapke bank ke customer care se bol raha hoon, aapka card block karne ki request aayi thi."},
+        {"startSec": 6, "endSec": 12, "text": "Request confirm ho gayi hai, naya card 7 din mein aapke ghar aa jaayega."},
+        {"startSec": 12, "endSec": 18, "text": "Yaad rakhiye, bank kabhi OTP ya PIN nahi maangta, kisi ke saath OTP share mat kijiye."}
+      ],
+      "llm": {
+        "scam_type": "none",
+        "events": [],
+        "entities": {"claimed_agency": null, "claimed_name": null, "case_no": null, "phones": [], "upi_ids": [], "accounts": [], "amount_asked": null},
+        "summary_hi": "Ye ek normal bank call lagti hai. Kisi ne OTP ya paise nahi maange."
+      },
+      "expected": {"level": "low", "score": 0, "stages": []}
+    },
+    {
+      "id": "benign_passport",
+      "kind": "benign",
+      "title": "Passport police verification",
+      "segments": [
+        {"startSec": 0, "endSec": 6, "text": "Namaste, main local police station se constable Verma bol raha hoon, aapke passport verification ke liye call kiya hai."},
+        {"startSec": 6, "endSec": 12, "text": "Kal subah gyarah baje apne original documents leke thane aa jaana."},
+        {"startSec": 12, "endSec": 18, "text": "Agar kal nahi aa sakte toh parson aa jaana, koi dikkat nahi."}
+      ],
+      "llm": {
+        "scam_type": "none",
+        "events": [
+          {"stage": "AUTHORITY", "quote": "main local police station se constable Verma bol raha hoon", "confidence": 0.6, "explanation_hi": "Police ka zikr, lekin koi pressure nahi"}
+        ],
+        "entities": {"claimed_agency": "police", "claimed_name": "constable Verma", "case_no": null, "phones": [], "upi_ids": [], "accounts": [], "amount_asked": null},
+        "summary_hi": "Ye passport verification ki normal call lagti hai. Koi dhamki ya paise ki maang nahi hai."
+      },
+      "expected": {"level": "low", "score": 9, "stages": ["authority"]}
+    },
+    {
+      "id": "ambiguous_family",
+      "kind": "ambiguous",
+      "title": "Beta: urgent paise",
+      "segments": [
+        {"startSec": 0, "endSec": 6, "text": "Papa main Rohan bol raha hoon, mera phone kharab ho gaya, ye dost ka number hai."},
+        {"startSec": 6, "endSec": 12, "text": "Hospital mein hoon, abhi turant pachaas hazaar chahiye."},
+        {"startSec": 12, "endSec": 18, "text": "Is number pe UPI kar do, main shaam ko sab bata dunga."}
+      ],
+      "llm": {
+        "scam_type": "family_emergency",
+        "events": [
+          {"stage": "URGENCY", "quote": "abhi turant pachaas hazaar chahiye", "confidence": 0.8, "explanation_hi": "Turant paise ka pressure"},
+          {"stage": "EXTRACTION", "quote": "Is number pe UPI kar do", "confidence": 0.85, "explanation_hi": "Naye number pe paise maange"}
+        ],
+        "entities": {"claimed_agency": null, "claimed_name": "Rohan", "case_no": null, "phones": [], "upi_ids": [], "accounts": [], "amount_asked": "pachaas hazaar"},
+        "summary_hi": "Naye number se beta ban ke turant paise maange gaye. Pehle Rohan ko unke purane number pe call karke confirm karein."
+      },
+      "expected": {"level": "medium", "score": 33, "stages": ["urgency", "extraction"]}
+    }
+  ]
+}

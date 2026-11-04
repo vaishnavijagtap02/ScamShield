@@ -37,7 +37,7 @@ Each task: read the linked docs → (tests first for logic) → implement → `d
   *AC:* MockClient tests: valid JSON → `LlmAnalysis`; fenced JSON parses; one malformed event is dropped and the rest are kept; timeout → `LlmException`. A test asserts the system prompt contains no transcript text.
 - [x] **T10 TelegramAlertService + GuardianStore.** Pairing code gen, deep link, `getUpdates` polling with offset, `sendMessage` (no `parse_mode`), and the alert text builder (max 3 quotes, ≤ 700 chars).
   *AC:* MockClient tests: `/start <code>` found → Guardian saved; wrong code ignored; send to 2 guardians, one fails → per-guardian results.
-- [ ] **T11 Sources.** `UploadSource` (WAV → split; MP3/M4A/OGG ≤ 30 s → a single chunk, passed as-is with the original filename; longer → `AudioFormatException`), `DemoSource` (emits segments every 1.2 s + canned LLM events; the interval is injectable for tests), `MicSource` (`record` `startStream` PCM16 16 kHz mono → 6 s chunks via `wavFromPcm16`).
+- [x] **T11 Sources.** `UploadSource` (WAV → split; MP3/M4A/OGG ≤ 30 s → a single chunk, passed as-is with the original filename; longer → `AudioFormatException`), `DemoSource` (emits segments every 1.2 s + canned LLM events; the interval is injectable for tests), `MicSource` (`record` `startStream` PCM16 16 kHz mono → 6 s chunks via `wavFromPcm16`).
   *AC:* unit tests for Upload/Demo with fake bytes and a zero interval. Mic is covered by the manual test in TESTING.md §6.
 
 ## Phase 3 — Controller + UI (~3:00–5:00)

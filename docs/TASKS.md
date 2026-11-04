@@ -41,7 +41,7 @@ Each task: read the linked docs → (tests first for logic) → implement → `d
   *AC:* unit tests for Upload/Demo with fake bytes and a zero interval. Mic is covered by the manual test in TESTING.md §6.
 
 ## Phase 3 — Controller + UI (~3:00–5:00)
-- [ ] **T12 AnalysisController.** Upload + Demo runs per ARCHITECTURE §4, with ordered pool-of-3 STT, live chip updates, final LLM + grounding, the fallback to `basicCheckOnly`, `partialAudio`, TTS + auto-alert hooks (via injected services).
+- [x] **T12 AnalysisController.** Upload + Demo runs per ARCHITECTURE §4, with ordered pool-of-3 STT, live chip updates, final LLM + grounding, the fallback to `basicCheckOnly`, `partialAudio`, TTS + auto-alert hooks (via injected services).
   *AC:* tests with fakes: Demo `scam_cbi` → HIGH 100; LLM throws → `basicCheckOnly` with lexicon-only score 85; 1 of 3 STT pieces fails → `partialAudio` true and segments stay ordered; HIGH + autoAlert → `alert.sendVerdict` is called once.
 - [ ] **T13 Home + Upload + Analysing** with `StageStamp`, `StageTrack`, `RiskMeter`.
   *AC:* goldens (1.0 and 1.3) for Home (with/without guardian), Upload (with error), Analysing (mid-run with 3 stamps). Report the anti-slop checklist with ✓/✗ per item, fix the ✗s.

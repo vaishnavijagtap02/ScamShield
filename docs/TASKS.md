@@ -21,7 +21,7 @@ Each task: read the linked docs → (tests first for logic) → implement → `d
   *AC:* tests for each stage in Latin AND Devanagari (≥ 2 positives each). Negatives: "bank kabhi OTP nahi maangta" → no extraction, "kal thane aa jaana" → nothing. Each script's lexicon-only stages match the table in TESTING.md §3.
 - [x] **T04 Grounding.** Quote and entity grounding per RISK_ENGINE §4.
   *AC:* in `scam_cbi`, "apne bete ko phone mat karna" and phone `9876543210` are rejected. Other canned quotes are accepted with `atSec` from the matching segment. Punctuation/case differences still match.
-- [ ] **T05 RiskEngine.** Formula + hard rules + levels + evidence selection per RISK_ENGINE §3.
+- [x] **T05 RiskEngine.** Formula + hard rules + levels + evidence selection per RISK_ENGINE §3.
   *AC:* all 6 vectors (lexicon + grounded LLM) give the exact score/level/stages. The lexicon-only vectors from TESTING.md §3 pass. Unit tests for each hard rule and the live-mode monotonic flag.
 - [ ] **T06 WAV utils.** `WavHeader.parse` (finds the `fmt ` and `data` chunks, rejects non-PCM16/non-mono/non-16 kHz with `AudioFormatException`), `WavSplitter.split(bytes, 25s)` → `AudioChunk`s with correct `startSec`, and `wavFromPcm16`.
   *AC:* tests build a synthetic 61 s WAV in memory → 3 chunks (25, 25, 11 s). Each chunk re-parses as a valid WAV. A header with an extra `LIST` chunk still parses.

@@ -15,7 +15,7 @@ Each task: read the linked docs → (tests first for logic) → implement → `d
   *AC:* the component golden PNG shows Mukta (not placeholder boxes), ink buttons, and paper background. Report anti-slop checklist items for these components.
 
 ## Phase 1 — Engine, pure Dart, TDD (~0:40–1:50)
-- [ ] **T02 Models + demo script loader.** `engine/models.dart` per ARCHITECTURE §3. `DemoScript.fromJson` for `assets/demo/scripts.json`.
+- [x] **T02 Models + demo script loader.** `engine/models.dart` per ARCHITECTURE §3. `DemoScript.fromJson` for `assets/demo/scripts.json`.
   *AC:* a test loads all 6 scripts from the file and asserts ids/segment counts.
 - [ ] **T03 Lexicon.** Normalization, the RegExps and the negation guard exactly per RISK_ENGINE §2.
   *AC:* tests for each stage in Latin AND Devanagari (≥ 2 positives each). Negatives: "bank kabhi OTP nahi maangta" → no extraction, "kal thane aa jaana" → nothing. Each script's lexicon-only stages match the table in TESTING.md §3.

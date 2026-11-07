@@ -11,7 +11,7 @@ Each task: read the linked docs → (tests first for logic) → implement → `d
 ## Phase 0 — Setup (~0:00–0:40)
 - [x] **T00 Scaffold.** `flutter create --org com.scamshield --platforms android scamshield` (or use the existing project). Add the CLAUDE.md packages. Put `analysis_options.yaml` from this pack at the root. Declare `assets/action_plan.json`, `assets/demo/`, and the Mukta fonts (400/600/700/800) in `pubspec.yaml`. Create the folder structure from ARCHITECTURE §2. Add `lib/core/config.dart` with `Config.validate()`. Add `<uses-permission RECORD_AUDIO/INTERNET>` to the Android manifest. Set Android `minSdk` ≥ 23.
   *AC:* `flutter analyze` 0 issues. The app launches to a placeholder Home on a device. `.env` is git-ignored.
-- [ ] **T01 Theme + strings + base widgets.** `tokens.dart`, `app_theme.dart` (manual `ColorScheme`, Mukta, flat AppBar, InkRipple, no elevation), `motion.dart`, `strings.dart` (Hinglish + Hindi maps, `S.of(lang)`), `BigButton`, `SectionCard`, `StatusLine`. Golden infra: `test/flutter_test_config.dart` loads Mukta. `test/golden/components_golden_test.dart` renders all BigButton variants.
+- [x] **T01 Theme + strings + base widgets.** `tokens.dart`, `app_theme.dart` (manual `ColorScheme`, Mukta, flat AppBar, InkRipple, no elevation), `motion.dart`, `strings.dart` (Hinglish + Hindi maps, `S.of(lang)`), `BigButton`, `SectionCard`, `StatusLine`. Golden infra: `test/flutter_test_config.dart` loads Mukta. `test/golden/components_golden_test.dart` renders all BigButton variants.
   *AC:* the component golden PNG shows Mukta (not placeholder boxes), ink buttons, and paper background. Report anti-slop checklist items for these components.
 
 ## Phase 1 — Engine, pure Dart, TDD (~0:40–1:50)
@@ -43,20 +43,20 @@ Each task: read the linked docs → (tests first for logic) → implement → `d
 ## Phase 3 — Controller + UI (~3:00–5:00)
 - [x] **T12 AnalysisController.** Upload + Demo runs per ARCHITECTURE §4, with ordered pool-of-3 STT, live chip updates, final LLM + grounding, the fallback to `basicCheckOnly`, `partialAudio`, TTS + auto-alert hooks (via injected services).
   *AC:* tests with fakes: Demo `scam_cbi` → HIGH 100; LLM throws → `basicCheckOnly` with lexicon-only score 85; 1 of 3 STT pieces fails → `partialAudio` true and segments stay ordered; HIGH + autoAlert → `alert.sendVerdict` is called once.
-- [ ] **T13 Home + Upload + Analysing** with `StageStamp`, `StageTrack`, `RiskMeter`.
+- [x] **T13 Home + Upload + Analysing** with `StageStamp`, `StageTrack`, `RiskMeter`.
   *AC:* goldens (1.0 and 1.3) for Home (with/without guardian), Upload (with error), Analysing (mid-run with 3 stamps). Report the anti-slop checklist with ✓/✗ per item, fix the ✗s.
-- [ ] **T14 Verdict** with `LevelBanner`, `EvidenceRow`, TTS replay button.
+- [x] **T14 Verdict** with `LevelBanner`, `EvidenceRow`, TTS replay button.
   *AC:* goldens for HIGH (`scam_cbi`), MEDIUM (`scam_trai`), LOW (`benign_bank`), and HIGH + `basicCheckOnly`. Widget test: the banner has a semantics label including the level word.
-- [ ] **T15 Questions + Action plan + Complaint.**
+- [x] **T15 Questions + Action plan + Complaint.**
   *AC:* widget test: answer paid=Haan → the plan's first card is urgent with the "1930 pe call karein" danger button (the `url_launcher` call is mocked). The complaint Copy button puts text on the clipboard. Goldens for all three screens.
-- [ ] **T16 Guardians + alert wiring.** QR screen, polling UI with countdown, success/timeout states, auto-alert switch, "Family ko bhejo" on Verdict with `StatusLine` states.
+- [x] **T16 Guardians + alert wiring.** QR screen, polling UI with countdown, success/timeout states, auto-alert switch, "Family ko bhejo" on Verdict with `StatusLine` states.
   *AC:* widget test with a fake AlertService: pairing success shows "jud gaye ✓". Goldens for QR + success.
 - [ ] **CHECKPOINT (hour 5):** the human runs TESTING.md §6 "Upload chain" on a real phone with real keys. Fix whatever breaks before continuing.
 
 ## Phase 4 — Bonus + hardening (~5:00–7:30)
-- [ ] **T17 Demo screen.** List the 6 scripts with kind tags → run through `/analysing` → `/verdict`.
+- [x] **T17 Demo screen.** List the 6 scripts with kind tags → run through `/analysing` → `/verdict`.
   *AC:* golden of the list. With airplane mode on, `scam_cbi` reaches HIGH.
-- [ ] **T18 Live Guard.** `MicSource` + windowed LLM every 2nd chunk (RISK_ENGINE §6), monotonic level, wakelock on while running, Stop → Verdict. Mic permission denied → error state.
+- [x] **T18 Live Guard.** `MicSource` + windowed LLM every 2nd chunk (RISK_ENGINE §6), monotonic level, wakelock on while running, Stop → Verdict. Mic permission denied → error state.
   *AC:* controller test with a fake source: the level never decreases. Manual test TESTING.md §6 "Live".
 - [ ] **T19 Design + a11y pass.** Regenerate all goldens at 1.0 and 1.3. Go through DESIGN.md §7 for EVERY screen and fix the ✗s. Check overflow at 1.3. Check semantics labels on icon-buttons.
   *AC:* a report table screen × checklist with all ✓.

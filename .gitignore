@@ -57,3 +57,4 @@ build/symbols/
 CLAUDE.md
 .claude/
 
+test/golden/failures/

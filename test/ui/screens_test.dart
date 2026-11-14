@@ -8,6 +8,7 @@ import 'package:scamshield/services/guardian_store.dart';
 import 'package:scamshield/state/analysis_controller.dart';
 import 'package:scamshield/state/providers.dart';
 import 'package:scamshield/ui/screens/complaint_screen.dart';
+import 'package:scamshield/ui/screens/demo_screen.dart';
 import 'package:scamshield/ui/screens/guardians_screen.dart';
 import 'package:scamshield/ui/screens/home_screen.dart';
 import 'package:scamshield/ui/screens/questions_screen.dart';
@@ -239,5 +240,14 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('भाषा / Language'), findsOneWidget);
+  });
+
+  testWidgets('DemoScreen loads scripts and renders list', (tester) async {
+    await tester.pumpWidget(pumpScreen(const DemoScreen()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Demo Recordings'), findsOneWidget);
+    expect(find.text('CBI digital arrest'), findsOneWidget);
+    expect(find.text('Courier parcel + customs'), findsOneWidget);
   });
 }

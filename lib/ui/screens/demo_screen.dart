@@ -46,10 +46,12 @@ class _DemoScreenState extends ConsumerState<DemoScreen> {
     }
   }
 
-  Future<void> _runDemo(DemoScript script) async {
-    final controller = ref.read(analysisControllerProvider.notifier);
-    await context.push('/analysing');
-    await controller.analyzeDemo(script);
+  void _runDemo(DemoScript script) {
+    final controller = ref.read(analysisControllerProvider.notifier)..reset();
+    if (mounted) {
+      unawaited(context.push('/analysing'));
+    }
+    unawaited(controller.analyzeDemo(script));
   }
 
   @override

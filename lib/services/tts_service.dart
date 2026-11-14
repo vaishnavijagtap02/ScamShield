@@ -16,7 +16,7 @@ class FlutterTtsService implements TtsService {
       await _tts.setLanguage('hi-IN');
       await _tts.setSpeechRate(0.45);
       await _tts.speak(text);
-    } on Exception {
+    } on Object {
       // Per ARCHITECTURE §7: TTS language missing -> silent, skip voice
     }
   }
@@ -25,7 +25,7 @@ class FlutterTtsService implements TtsService {
   Future<void> stop() async {
     try {
       await _tts.stop();
-    } on Exception {
+    } on Object {
       // Ignore stop errors
     }
   }

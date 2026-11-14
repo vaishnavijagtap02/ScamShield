@@ -434,7 +434,11 @@ class AnalysisController extends Notifier<AnalysisState> {
   Future<void> _onVerdictProduced(Verdict verdict) async {
     bool? alertSent;
     if (verdict.level == RiskLevel.high) {
-      await _tts.speakWarning('Savdhaan! Yeh call ek fraud lagti hai.');
+      try {
+        await _tts.speakWarning('Savdhaan! Yeh call ek fraud lagti hai.');
+      } on Object {
+        // Safe fallback if TTS is not available on web/platform
+      }
 
       final store = _store;
       if (store != null && store.getAutoAlert()) {
@@ -445,11 +449,15 @@ class AnalysisController extends Notifier<AnalysisState> {
             answers: const Answers(),
             userName: store.getUserName(),
           );
-          final sendResults = await _alert.sendAlert(
-            text: alertText,
-            guardians: guardians,
-          );
-          alertSent = sendResults.values.any((s) => s);
+          try {
+            final sendResults = await _alert.sendAlert(
+              text: alertText,
+              guardians: guardians,
+            );
+            alertSent = sendResults.values.any((s) => s);
+          } on Object {
+            // Non-fatal if alert network fails
+          }
         }
       }
     }

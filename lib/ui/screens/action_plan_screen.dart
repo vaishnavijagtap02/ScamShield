@@ -11,6 +11,7 @@ import 'package:scamshield/ui/strings.dart';
 import 'package:scamshield/ui/theme/tokens.dart';
 import 'package:scamshield/ui/widgets/action_rule_card.dart';
 import 'package:scamshield/ui/widgets/big_button.dart';
+import 'package:scamshield/ui/widgets/responsive_layout.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ActionPlanScreen extends ConsumerStatefulWidget {
@@ -63,10 +64,10 @@ class _ActionPlanScreenState extends ConsumerState<ActionPlanScreen> {
     final answers = widget.answers ?? const Answers();
 
     if (_isLoading) {
-      return Scaffold(
+      return ResponsiveLayout(
         appBar: AppBar(title: Text(s.planTitle)),
-        body: const Center(
-          child: CircularProgressIndicator(color: AppColors.ink),
+        child: const Center(
+          child: CircularProgressIndicator(color: AppColors.accent),
         ),
       );
     }
@@ -78,9 +79,9 @@ class _ActionPlanScreenState extends ConsumerState<ActionPlanScreen> {
       for (final a in plan?.actions ?? <ActionPlanAction>[]) a.id: a,
     };
 
-    return Scaffold(
+    return ResponsiveLayout(
       appBar: AppBar(title: Text(s.planTitle)),
-      body: SafeArea(
+      child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.screenPadding,
@@ -114,6 +115,7 @@ class _ActionPlanScreenState extends ConsumerState<ActionPlanScreen> {
               const SizedBox(height: AppSpacing.s16),
               BigButton(
                 label: s.draftComplaintBtn,
+                icon: Icons.description_outlined,
                 onPressed: () async {
                   await context.push('/complaint', extra: answers);
                 },

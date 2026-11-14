@@ -9,6 +9,7 @@ import 'package:scamshield/engine/models.dart';
 import 'package:scamshield/state/providers.dart';
 import 'package:scamshield/ui/strings.dart';
 import 'package:scamshield/ui/theme/tokens.dart';
+import 'package:scamshield/ui/widgets/responsive_layout.dart';
 import 'package:scamshield/ui/widgets/section_card.dart';
 
 class DemoScreen extends ConsumerStatefulWidget {
@@ -56,9 +57,9 @@ class _DemoScreenState extends ConsumerState<DemoScreen> {
     final settings = ref.watch(settingsControllerProvider);
     final s = S(settings.language);
 
-    return Scaffold(
+    return ResponsiveLayout(
       appBar: AppBar(title: Text(s.demoScreenTitle)),
-      body: SafeArea(
+      child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.screenPadding,
@@ -69,14 +70,19 @@ class _DemoScreenState extends ConsumerState<DemoScreen> {
             children: [
               Text(
                 s.demoSubtitle,
-                style: AppTypography.body.copyWith(color: AppColors.inkMuted),
+                style: AppTypography.body.copyWith(
+                  color: AppColors.inkMuted,
+                  fontSize: 16,
+                ),
               ),
               const SizedBox(height: AppSpacing.s16),
 
               Expanded(
                 child: _isLoading
                     ? const Center(
-                        child: CircularProgressIndicator(color: AppColors.ink),
+                        child: CircularProgressIndicator(
+                          color: AppColors.accent,
+                        ),
                       )
                     : _scripts.isEmpty
                     ? const Center(
@@ -97,19 +103,19 @@ class _DemoScreenState extends ConsumerState<DemoScreen> {
 
                           final (tagBg, tagFg, tagLabel) = isScam
                               ? (
+                                  AppColors.highStrong.withValues(alpha: 0.15),
                                   AppColors.highStrong,
-                                  AppColors.onHigh,
                                   s.tagScam,
                                 )
                               : isSuspicious
                               ? (
                                   AppColors.medTint,
-                                  AppColors.medInk,
+                                  AppColors.medStrong,
                                   s.tagSuspicious,
                                 )
                               : (
-                                  AppColors.lowTint,
-                                  AppColors.lowStrong,
+                                  AppColors.accent.withValues(alpha: 0.15),
+                                  AppColors.accent,
                                   s.tagReal,
                                 );
 
@@ -126,7 +132,9 @@ class _DemoScreenState extends ConsumerState<DemoScreen> {
                                   Expanded(
                                     child: Text(
                                       script.title,
-                                      style: AppTypography.bodyStrong,
+                                      style: AppTypography.bodyStrong.copyWith(
+                                        fontSize: 17,
+                                      ),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -140,20 +148,31 @@ class _DemoScreenState extends ConsumerState<DemoScreen> {
                                     decoration: BoxDecoration(
                                       color: tagBg,
                                       borderRadius: AppRadius.border8,
+                                      border: Border.all(
+                                        color: tagFg.withValues(alpha: 0.4),
+                                      ),
                                     ),
                                     child: Text(
                                       tagLabel,
                                       style: AppTypography.caption.copyWith(
                                         color: tagFg,
                                         fontWeight: FontWeight.w700,
+                                        fontSize: 13,
                                       ),
                                     ),
                                   ),
                                   const SizedBox(width: AppSpacing.s8),
-                                  const Icon(
-                                    Icons.play_arrow_rounded,
-                                    color: AppColors.ink,
-                                    size: 24,
+                                  Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.elevatedSurface,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.play_arrow_rounded,
+                                      color: AppColors.accent,
+                                      size: 20,
+                                    ),
                                   ),
                                 ],
                               ),

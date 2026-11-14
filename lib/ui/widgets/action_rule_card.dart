@@ -22,32 +22,43 @@ class ActionRuleCard extends StatelessWidget {
     final title = s.isHindi ? rule.titleHindi : rule.titleHinglish;
 
     final border = rule.urgent
-        ? const Border(
-            left: BorderSide(color: AppColors.highStrong, width: 6),
-            top: BorderSide(color: AppColors.line, width: 1.5),
-            right: BorderSide(color: AppColors.line, width: 1.5),
-            bottom: BorderSide(color: AppColors.line, width: 1.5),
-          )
-        : Border.all(color: AppColors.line, width: 1.5);
+        ? Border.all(color: AppColors.highStrong, width: 1.5)
+        : Border.all(color: AppColors.line);
 
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: AppRadius.border12,
+        color: AppColors.cardSurface,
+        borderRadius: AppRadius.border20,
         border: border,
+        boxShadow: rule.urgent
+            ? [
+                BoxShadow(
+                  color: AppColors.highStrong.withValues(alpha: 0.18),
+                  blurRadius: 16,
+                  offset: const Offset(0, 4),
+                ),
+              ]
+            : AppShadows.subtle,
       ),
-      padding: const EdgeInsets.all(AppSpacing.s16),
+      padding: const EdgeInsets.all(AppSpacing.s20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               if (rule.urgent) ...[
-                const Icon(
-                  Icons.warning_amber_rounded,
-                  color: AppColors.highStrong,
-                  size: 24,
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppColors.highStrong.withValues(alpha: 0.15),
+                    borderRadius: AppRadius.border8,
+                  ),
+                  child: const Icon(
+                    Icons.warning_amber_rounded,
+                    color: AppColors.highStrong,
+                    size: 20,
+                  ),
                 ),
                 const SizedBox(width: AppSpacing.s8),
               ],
@@ -56,15 +67,16 @@ class ActionRuleCard extends StatelessWidget {
                   title,
                   style: AppTypography.h2.copyWith(
                     color: rule.urgent ? AppColors.highStrong : AppColors.ink,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.s12),
+          const SizedBox(height: AppSpacing.s16),
           for (var i = 0; i < rule.steps.length; i++) ...[
             Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.s8),
+              padding: const EdgeInsets.only(bottom: AppSpacing.s12),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -73,20 +85,40 @@ class ActionRuleCard extends StatelessWidget {
                     height: 28,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColors.paper,
+                      color: rule.urgent
+                          ? AppColors.highStrong.withValues(alpha: 0.2)
+                          : AppColors.elevatedSurface,
                       borderRadius: AppRadius.border8,
-                      border: Border.all(color: AppColors.line),
+                      border: Border.all(
+                        color: rule.urgent
+                            ? AppColors.highStrong.withValues(alpha: 0.5)
+                            : AppColors.line,
+                      ),
                     ),
                     child: Text(
                       '${i + 1}',
-                      style: AppTypography.label.copyWith(fontSize: 16),
+                      style: AppTypography.label.copyWith(
+                        fontSize: 14,
+                        color: rule.urgent
+                            ? AppColors.highStrong
+                            : AppColors.accent,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.s12),
                   Expanded(
-                    child: Text(
-                      s.isHindi ? rule.steps[i].hindi : rule.steps[i].hinglish,
-                      style: AppTypography.body,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Text(
+                        s.isHindi
+                            ? rule.steps[i].hindi
+                            : rule.steps[i].hinglish,
+                        style: AppTypography.body.copyWith(
+                          fontSize: 17,
+                          height: 1.45,
+                        ),
+                      ),
                     ),
                   ),
                 ],

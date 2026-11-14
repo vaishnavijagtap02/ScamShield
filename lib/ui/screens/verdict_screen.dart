@@ -9,6 +9,7 @@ import 'package:scamshield/ui/theme/tokens.dart';
 import 'package:scamshield/ui/widgets/big_button.dart';
 import 'package:scamshield/ui/widgets/evidence_row.dart';
 import 'package:scamshield/ui/widgets/level_banner.dart';
+import 'package:scamshield/ui/widgets/responsive_layout.dart';
 import 'package:scamshield/ui/widgets/stage_track.dart';
 import 'package:scamshield/ui/widgets/status_line.dart';
 
@@ -76,9 +77,9 @@ class _VerdictScreenState extends ConsumerState<VerdictScreen> {
     final verdict = analysisState.verdict;
 
     if (verdict == null) {
-      return Scaffold(
+      return ResponsiveLayout(
         appBar: AppBar(title: Text(s.verdictTitle)),
-        body: Center(
+        child: Center(
           child: BigButton(label: 'Home', onPressed: () => context.go('/')),
         ),
       );
@@ -108,7 +109,7 @@ class _VerdictScreenState extends ConsumerState<VerdictScreen> {
           context.go('/');
         }
       },
-      child: Scaffold(
+      child: ResponsiveLayout(
         appBar: AppBar(
           title: Text(s.verdictTitle),
           leading: IconButton(
@@ -121,13 +122,13 @@ class _VerdictScreenState extends ConsumerState<VerdictScreen> {
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.volume_up_outlined, size: 28),
+              icon: const Icon(Icons.volume_up_rounded, size: 28),
               tooltip: s.replayVoice,
               onPressed: () => _replayTts(verdict),
             ),
           ],
         ),
-        body: SafeArea(
+        child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.screenPadding,
@@ -152,31 +153,37 @@ class _VerdictScreenState extends ConsumerState<VerdictScreen> {
                         verdict.scamType != ScamType.unknown)
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
+                          horizontal: 14,
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.ink,
+                          color: AppColors.elevatedSurface,
                           borderRadius: AppRadius.border8,
+                          border: Border.all(
+                            color: AppColors.accent.withValues(alpha: 0.5),
+                          ),
                         ),
                         child: Text(
                           s.scamTypeName(verdict.scamType),
                           style: AppTypography.label.copyWith(
-                            color: AppColors.surface,
-                            fontSize: 16,
+                            color: AppColors.accent,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
                     if (verdict.basicCheckOnly)
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
+                          horizontal: 14,
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.medTint,
                           borderRadius: AppRadius.border8,
-                          border: Border.all(color: AppColors.medStrong),
+                          border: Border.all(
+                            color: AppColors.medStrong.withValues(alpha: 0.5),
+                          ),
                         ),
                         child: Text(
                           s.labelBasicCheck,
@@ -195,8 +202,11 @@ class _VerdictScreenState extends ConsumerState<VerdictScreen> {
                 const SizedBox(height: AppSpacing.s24),
 
                 // Evidence Section
-                Text(s.evidenceTitle, style: AppTypography.h2),
-                const SizedBox(height: AppSpacing.s8),
+                Text(
+                  s.evidenceTitle,
+                  style: AppTypography.h2.copyWith(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: AppSpacing.s12),
 
                 if (verdict.evidence.isEmpty)
                   Padding(

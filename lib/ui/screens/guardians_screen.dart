@@ -7,6 +7,7 @@ import 'package:scamshield/state/providers.dart';
 import 'package:scamshield/ui/strings.dart';
 import 'package:scamshield/ui/theme/tokens.dart';
 import 'package:scamshield/ui/widgets/big_button.dart';
+import 'package:scamshield/ui/widgets/responsive_layout.dart';
 import 'package:scamshield/ui/widgets/section_card.dart';
 import 'package:scamshield/ui/widgets/status_line.dart';
 
@@ -48,9 +49,9 @@ class _GuardiansScreenState extends ConsumerState<GuardiansScreen> {
     final guardianState = ref.watch(guardianControllerProvider);
     final guardians = guardianState.guardians;
 
-    return Scaffold(
+    return ResponsiveLayout(
       appBar: AppBar(title: Text(s.guardiansTitle)),
-      body: SafeArea(
+      child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.screenPadding,
@@ -69,10 +70,17 @@ class _GuardiansScreenState extends ConsumerState<GuardiansScreen> {
                   height: 56,
                   child: Row(
                     children: [
-                      const Icon(
-                        Icons.notifications_active_outlined,
-                        color: AppColors.ink,
-                        size: 24,
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.accent.withValues(alpha: 0.15),
+                          borderRadius: AppRadius.border8,
+                        ),
+                        child: const Icon(
+                          Icons.notifications_active_rounded,
+                          color: AppColors.accent,
+                          size: 22,
+                        ),
                       ),
                       const SizedBox(width: AppSpacing.s12),
                       Expanded(
@@ -85,7 +93,7 @@ class _GuardiansScreenState extends ConsumerState<GuardiansScreen> {
                       ),
                       Switch(
                         value: guardianState.autoAlert,
-                        activeThumbColor: AppColors.ink,
+                        activeThumbColor: AppColors.accent,
                         onChanged: (val) async {
                           await ref
                               .read(guardianControllerProvider.notifier)
@@ -140,30 +148,30 @@ class _GuardiansScreenState extends ConsumerState<GuardiansScreen> {
                                     ? Config.telegramBotUsername
                                     : 'scamshield_bot',
                               ),
-                              style: AppTypography.body,
+                              style: AppTypography.body.copyWith(
+                                color: AppColors.inkMuted,
+                                fontSize: 16,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: AppSpacing.s16),
 
-                            // QR code
+                            // QR code with white backing for scanning contrast
                             if (guardianState.pairingUrl != null)
                               Container(
-                                padding: const EdgeInsets.all(AppSpacing.s12),
+                                padding: const EdgeInsets.all(AppSpacing.s16),
                                 decoration: BoxDecoration(
-                                  color: AppColors.surface,
-                                  borderRadius: AppRadius.border12,
-                                  border: Border.all(
-                                    color: AppColors.line,
-                                    width: 1.5,
-                                  ),
+                                  color: Colors.white,
+                                  borderRadius: AppRadius.border16,
+                                  boxShadow: AppShadows.elevated,
                                 ),
                                 child: QrImageView(
                                   data: guardianState.pairingUrl!,
-                                  size: 220,
-                                  backgroundColor: AppColors.surface,
+                                  size: 200,
+                                  backgroundColor: Colors.white,
                                 ),
                               ),
-                            const SizedBox(height: AppSpacing.s12),
+                            const SizedBox(height: AppSpacing.s16),
 
                             // Selectable Link
                             if (guardianState.pairingUrl != null) ...[
@@ -178,11 +186,11 @@ class _GuardiansScreenState extends ConsumerState<GuardiansScreen> {
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 8,
+                                    horizontal: 14,
+                                    vertical: 10,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColors.paper,
+                                    color: AppColors.elevatedSurface,
                                     borderRadius: AppRadius.border8,
                                     border: Border.all(color: AppColors.line),
                                   ),
@@ -192,17 +200,20 @@ class _GuardiansScreenState extends ConsumerState<GuardiansScreen> {
                                       const Icon(
                                         Icons.copy_rounded,
                                         size: 16,
-                                        color: AppColors.inkMuted,
+                                        color: AppColors.accent,
                                       ),
                                       const SizedBox(width: 8),
-                                      Text(
-                                        _linkCopied
-                                            ? s.linkCopied
-                                            : guardianState.pairingUrl!,
-                                        style: AppTypography.caption.copyWith(
-                                          fontWeight: FontWeight.w600,
+                                      Flexible(
+                                        child: Text(
+                                          _linkCopied
+                                              ? s.linkCopied
+                                              : guardianState.pairingUrl!,
+                                          style: AppTypography.caption.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.ink,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
                                   ),
@@ -216,7 +227,8 @@ class _GuardiansScreenState extends ConsumerState<GuardiansScreen> {
                               '${s.waitingCountdown} ${_formatCountdown(guardianState.countdown)}',
                               style: AppTypography.caption.copyWith(
                                 fontWeight: FontWeight.w700,
-                                color: AppColors.ink,
+                                color: AppColors.accent,
+                                fontSize: 16,
                               ),
                             ),
                           ],
@@ -230,11 +242,24 @@ class _GuardiansScreenState extends ConsumerState<GuardiansScreen> {
                 Expanded(
                   child: guardians.isEmpty
                       ? Center(
-                          child: Text(
-                            s.noGuardians,
-                            style: AppTypography.body.copyWith(
-                              color: AppColors.inkMuted,
-                            ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.people_outline_rounded,
+                                size: 48,
+                                color: AppColors.inkMuted.withValues(
+                                  alpha: 0.5,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                s.noGuardians,
+                                style: AppTypography.body.copyWith(
+                                  color: AppColors.inkMuted,
+                                ),
+                              ),
+                            ],
                           ),
                         )
                       : ListView.separated(
@@ -246,16 +271,27 @@ class _GuardiansScreenState extends ConsumerState<GuardiansScreen> {
                             return SectionCard(
                               child: Row(
                                 children: [
-                                  const Icon(
-                                    Icons.person_outline_rounded,
-                                    size: 28,
-                                    color: AppColors.ink,
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.accent.withValues(
+                                        alpha: 0.15,
+                                      ),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.person_rounded,
+                                      size: 24,
+                                      color: AppColors.accent,
+                                    ),
                                   ),
                                   const SizedBox(width: AppSpacing.s12),
                                   Expanded(
                                     child: Text(
                                       g.name,
-                                      style: AppTypography.bodyStrong,
+                                      style: AppTypography.bodyStrong.copyWith(
+                                        fontSize: 17,
+                                      ),
                                     ),
                                   ),
                                   IconButton(
@@ -284,7 +320,7 @@ class _GuardiansScreenState extends ConsumerState<GuardiansScreen> {
                 // Button: Naya guardian jodein
                 BigButton(
                   label: s.addGuardianBtn,
-                  icon: Icons.person_add_outlined,
+                  icon: Icons.person_add_rounded,
                   onPressed: _startPairing,
                 ),
                 const SizedBox(height: AppSpacing.s12),

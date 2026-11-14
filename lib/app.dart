@@ -80,7 +80,9 @@ class ScamShieldApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: s.appName,
-      theme: AppTheme.lightTheme,
+      theme: AppTheme.darkTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.dark,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

@@ -21,9 +21,12 @@ class EvidenceRow extends StatelessWidget {
     final stageStr = s.stageName(event.stage);
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.s12),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: AppColors.line, width: 1.5)),
+      margin: const EdgeInsets.only(bottom: AppSpacing.s12),
+      padding: const EdgeInsets.all(AppSpacing.s16),
+      decoration: BoxDecoration(
+        color: AppColors.cardSurface,
+        borderRadius: AppRadius.border16,
+        border: Border.all(color: AppColors.line),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,24 +34,36 @@ class EvidenceRow extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: AppColors.paper,
+                  color: AppColors.elevatedSurface,
                   borderRadius: AppRadius.border8,
                   border: Border.all(color: AppColors.line),
                 ),
                 child: Text(
                   _formatTimestamp(event.atSec),
                   style: AppTypography.caption.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.ink,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.accent,
+                    fontSize: 13,
                   ),
                 ),
               ),
               const SizedBox(width: AppSpacing.s8),
-              Text(
-                '· $stageStr',
-                style: AppTypography.label.copyWith(color: AppColors.ink),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: AppColors.highStrong.withValues(alpha: 0.15),
+                  borderRadius: AppRadius.border8,
+                ),
+                child: Text(
+                  '· $stageStr',
+                  style: AppTypography.caption.copyWith(
+                    color: AppColors.highStrong,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                  ),
+                ),
               ),
               const Spacer(),
               if (event.source == EventSource.lexicon)
@@ -58,37 +73,50 @@ class EvidenceRow extends StatelessWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.line.withValues(alpha: 0.5),
+                    color: AppColors.elevatedSurface,
                     borderRadius: AppRadius.border8,
+                    border: Border.all(color: AppColors.line),
                   ),
                   child: Text(
-                    'Lexicon',
-                    style: AppTypography.caption.copyWith(fontSize: 12),
+                    'Lexicon Pattern',
+                    style: AppTypography.caption.copyWith(
+                      fontSize: 11,
+                      color: AppColors.inkMuted,
+                    ),
                   ),
                 ),
             ],
           ),
-          const SizedBox(height: AppSpacing.s8),
+          const SizedBox(height: AppSpacing.s12),
           Container(
-            padding: const EdgeInsets.all(AppSpacing.s8),
+            width: double.infinity,
+            padding: const EdgeInsets.all(AppSpacing.s12),
             decoration: BoxDecoration(
-              color: AppColors.highlight,
+              color: AppColors.elevatedSurface,
               borderRadius: AppRadius.border8,
+              border: const Border(
+                left: BorderSide(color: AppColors.accent, width: 3),
+              ),
             ),
             child: Text(
               '"${event.quote}"',
               style: AppTypography.body.copyWith(
                 fontWeight: FontWeight.w600,
                 color: AppColors.ink,
+                fontStyle: FontStyle.italic,
+                fontSize: 18,
               ),
             ),
           ),
           if (event.explanationHi != null &&
               event.explanationHi!.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.s4),
+            const SizedBox(height: AppSpacing.s8),
             Text(
               event.explanationHi!,
-              style: AppTypography.caption.copyWith(color: AppColors.inkMuted),
+              style: AppTypography.caption.copyWith(
+                color: AppColors.inkMuted,
+                fontSize: 14,
+              ),
             ),
           ],
         ],

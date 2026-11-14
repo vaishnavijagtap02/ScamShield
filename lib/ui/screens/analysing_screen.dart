@@ -7,6 +7,7 @@ import 'package:scamshield/state/providers.dart';
 import 'package:scamshield/ui/strings.dart';
 import 'package:scamshield/ui/theme/tokens.dart';
 import 'package:scamshield/ui/widgets/big_button.dart';
+import 'package:scamshield/ui/widgets/responsive_layout.dart';
 import 'package:scamshield/ui/widgets/risk_meter.dart';
 import 'package:scamshield/ui/widgets/section_card.dart';
 import 'package:scamshield/ui/widgets/stage_track.dart';
@@ -71,12 +72,12 @@ class _AnalysingScreenState extends ConsumerState<AnalysingScreen> {
         ? (state.piecesDone / state.piecesTotal).clamp(0.0, 1.0)
         : 0.1;
 
-    return Scaffold(
+    return ResponsiveLayout(
       appBar: AppBar(
         title: Text(s.analysingTitle),
         automaticallyImplyLeading: false,
       ),
-      body: SafeArea(
+      child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.screenPadding,
@@ -105,9 +106,9 @@ class _AnalysingScreenState extends ConsumerState<AnalysingScreen> {
                     child: LinearProgressIndicator(
                       value: progressFraction,
                       minHeight: 8,
-                      backgroundColor: AppColors.line,
+                      backgroundColor: AppColors.elevatedSurface,
                       valueColor: const AlwaysStoppedAnimation<Color>(
-                        AppColors.ink,
+                        AppColors.accent,
                       ),
                     ),
                   ),
@@ -118,6 +119,7 @@ class _AnalysingScreenState extends ConsumerState<AnalysingScreen> {
                         : s.listeningStatus,
                     style: AppTypography.caption.copyWith(
                       fontWeight: FontWeight.w600,
+                      color: AppColors.inkMuted,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -182,30 +184,50 @@ class _AnalysingScreenState extends ConsumerState<AnalysingScreen> {
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: AppRadius.border12,
-                      border: Border.all(color: AppColors.line, width: 1.5),
+                      color: AppColors.cardSurface,
+                      borderRadius: AppRadius.border16,
+                      border: Border.all(color: AppColors.line),
                     ),
-                    padding: const EdgeInsets.all(AppSpacing.s12),
+                    padding: const EdgeInsets.all(AppSpacing.s16),
                     child: state.segments.isEmpty
                         ? Center(
-                            child: Text(
-                              s.listeningStatus,
-                              style: AppTypography.body.copyWith(
-                                color: AppColors.inkMuted,
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      AppColors.accent,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: AppSpacing.s12),
+                                Text(
+                                  s.listeningStatus,
+                                  style: AppTypography.body.copyWith(
+                                    color: AppColors.inkMuted,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
                             ),
                           )
                         : ListView.separated(
                             controller: _scrollController,
                             itemCount: state.segments.length,
                             separatorBuilder: (context, index) =>
-                                const Divider(),
+                                const Divider(color: AppColors.line),
                             itemBuilder: (context, index) {
                               final seg = state.segments[index];
                               final matchedQuotes = state.events
                                   .map((e) => e.quote.toLowerCase())
                                   .toList();
+                              final isMatched = matchedQuotes.any(
+                                (q) => seg.text.toLowerCase().contains(q),
+                              );
 
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -214,14 +236,15 @@ class _AnalysingScreenState extends ConsumerState<AnalysingScreen> {
                                 child: Text(
                                   seg.text,
                                   style: AppTypography.body.copyWith(
-                                    backgroundColor:
-                                        matchedQuotes.any(
-                                          (q) => seg.text
-                                              .toLowerCase()
-                                              .contains(q),
-                                        )
-                                        ? AppColors.highlight
+                                    color: isMatched
+                                        ? AppColors.ink
+                                        : AppColors.ink.withValues(alpha: 0.8),
+                                    backgroundColor: isMatched
+                                        ? AppColors.highStrong.withValues(
+                                            alpha: 0.25,
+                                          )
                                         : Colors.transparent,
+                                    fontSize: 17,
                                   ),
                                 ),
                               );

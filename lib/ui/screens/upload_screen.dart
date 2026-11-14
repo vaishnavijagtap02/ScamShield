@@ -9,6 +9,7 @@ import 'package:scamshield/state/providers.dart';
 import 'package:scamshield/ui/strings.dart';
 import 'package:scamshield/ui/theme/tokens.dart';
 import 'package:scamshield/ui/widgets/big_button.dart';
+import 'package:scamshield/ui/widgets/responsive_layout.dart';
 import 'package:scamshield/ui/widgets/section_card.dart';
 
 class UploadScreen extends ConsumerStatefulWidget {
@@ -86,9 +87,9 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     final settings = ref.watch(settingsControllerProvider);
     final s = S(settings.language);
 
-    return Scaffold(
+    return ResponsiveLayout(
       appBar: AppBar(title: Text(s.uploadTitle)),
-      body: SafeArea(
+      child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.screenPadding,
@@ -97,9 +98,61 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                s.uploadSupportedNote,
-                style: AppTypography.body.copyWith(color: AppColors.inkMuted),
+              // Hero upload drop zone
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: _isPicking ? null : _pickAndAnalyze,
+                  borderRadius: AppRadius.border20,
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.s24,
+                      vertical: AppSpacing.s32,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardSurface,
+                      borderRadius: AppRadius.border20,
+                      border: Border.all(
+                        color: AppColors.accent.withValues(alpha: 0.4),
+                        width: 1.5,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.accent.withValues(alpha: 0.08),
+                          blurRadius: 24,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 64,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            color: AppColors.accent.withValues(alpha: 0.12),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.cloud_upload_rounded,
+                            size: 36,
+                            color: AppColors.accent,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.s12),
+                        Text(
+                          s.uploadSupportedNote,
+                          style: AppTypography.caption.copyWith(
+                            color: AppColors.inkMuted,
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: AppSpacing.s24),
 
@@ -119,6 +172,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                           style: AppTypography.body.copyWith(
                             color: AppColors.highStrong,
                             fontWeight: FontWeight.w600,
+                            fontSize: 16,
                           ),
                         ),
                       ),
@@ -136,21 +190,32 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
               ),
               const Spacer(),
 
-              // Privacy Caption
+              // Privacy Caption Card
               SectionCard(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
-                      Icons.lock_outline_rounded,
-                      color: AppColors.inkMuted,
-                      size: 20,
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.elevatedSurface,
+                        borderRadius: AppRadius.border8,
+                      ),
+                      child: const Icon(
+                        Icons.lock_outline_rounded,
+                        color: AppColors.accent,
+                        size: 20,
+                      ),
                     ),
-                    const SizedBox(width: AppSpacing.s8),
+                    const SizedBox(width: AppSpacing.s12),
                     Expanded(
                       child: Text(
                         s.privacyCaption,
-                        style: AppTypography.caption,
+                        style: AppTypography.caption.copyWith(
+                          color: AppColors.inkMuted,
+                          fontSize: 14,
+                          height: 1.4,
+                        ),
                       ),
                     ),
                   ],

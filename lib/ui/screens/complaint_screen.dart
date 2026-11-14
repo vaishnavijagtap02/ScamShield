@@ -7,6 +7,7 @@ import 'package:scamshield/state/providers.dart';
 import 'package:scamshield/ui/strings.dart';
 import 'package:scamshield/ui/theme/tokens.dart';
 import 'package:scamshield/ui/widgets/big_button.dart';
+import 'package:scamshield/ui/widgets/responsive_layout.dart';
 import 'package:scamshield/ui/widgets/section_card.dart';
 import 'package:scamshield/ui/widgets/status_line.dart';
 import 'package:share_plus/share_plus.dart';
@@ -59,9 +60,9 @@ class _ComplaintScreenState extends ConsumerState<ComplaintScreen> {
         ? ComplaintService.build(verdict, answers, DateTime.now())
         : 'Complaint draft generation unavailable.';
 
-    return Scaffold(
+    return ResponsiveLayout(
       appBar: AppBar(title: Text(s.complaintTitle)),
-      body: SafeArea(
+      child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.screenPadding,
@@ -78,6 +79,8 @@ class _ComplaintScreenState extends ConsumerState<ComplaintScreen> {
                       style: AppTypography.body.copyWith(
                         fontFamily: AppTypography.fontFamily,
                         height: 1.6,
+                        fontSize: 16,
+                        color: AppColors.ink,
                       ),
                     ),
                   ),

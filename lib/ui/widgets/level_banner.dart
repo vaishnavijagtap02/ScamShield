@@ -13,24 +13,46 @@ class LevelBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
 
-    final (bgColor, fgColor, icon, title, defaultSub) = switch (level) {
+    final (
+      gradient,
+      borderColor,
+      glowColor,
+      icon,
+      title,
+      defaultSub,
+    ) = switch (level) {
       RiskLevel.high => (
+        const LinearGradient(
+          colors: [Color(0xFF4A0E0E), Color(0xFF1E0707)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         AppColors.highStrong,
-        AppColors.onHigh,
+        AppColors.highStrong.withValues(alpha: 0.3),
         Icons.warning_amber_rounded,
         s.levelKhatra,
         s.levelKhatraSub,
       ),
       RiskLevel.medium => (
-        AppColors.medTint,
-        AppColors.medInk,
+        const LinearGradient(
+          colors: [Color(0xFF422C05), Color(0xFF1C1302)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        AppColors.medStrong,
+        AppColors.medStrong.withValues(alpha: 0.3),
         Icons.error_outline_rounded,
         s.levelSavdhan,
         s.levelSavdhanSub,
       ),
       RiskLevel.low => (
-        AppColors.lowTint,
-        AppColors.lowStrong,
+        const LinearGradient(
+          colors: [Color(0xFF09331D), Color(0xFF03140B)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        AppColors.accent,
+        AppColors.accent.withValues(alpha: 0.3),
         Icons.check_circle_outline_rounded,
         s.levelTheek,
         s.levelTheekSub,
@@ -44,17 +66,32 @@ class LevelBanner extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.screenPadding,
-          vertical: AppSpacing.s24,
+          horizontal: AppSpacing.s20,
+          vertical: AppSpacing.s20,
         ),
         decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: AppRadius.border12,
+          gradient: gradient,
+          borderRadius: AppRadius.border20,
+          border: Border.all(color: borderColor, width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: glowColor,
+              blurRadius: 20,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, size: 40, color: fgColor),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: borderColor.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+                border: Border.all(color: borderColor.withValues(alpha: 0.5)),
+              ),
+              child: Icon(icon, size: 36, color: borderColor),
+            ),
             const SizedBox(width: AppSpacing.s16),
             Expanded(
               child: Column(
@@ -62,14 +99,20 @@ class LevelBanner extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: AppTypography.display.copyWith(color: fgColor),
+                    style: AppTypography.display.copyWith(
+                      color: AppColors.ink,
+                      fontSize: 32,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.5,
+                    ),
                   ),
-                  const SizedBox(height: AppSpacing.s4),
+                  const SizedBox(height: 2),
                   Text(
                     subtitle,
                     style: AppTypography.body.copyWith(
-                      color: fgColor.withValues(alpha: 0.95),
+                      color: AppColors.ink.withValues(alpha: 0.85),
                       fontWeight: FontWeight.w600,
+                      fontSize: 17,
                     ),
                   ),
                 ],

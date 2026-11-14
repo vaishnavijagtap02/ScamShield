@@ -10,6 +10,7 @@ import 'package:scamshield/ui/strings.dart';
 import 'package:scamshield/ui/theme/tokens.dart';
 import 'package:scamshield/ui/widgets/big_button.dart';
 import 'package:scamshield/ui/widgets/level_banner.dart';
+import 'package:scamshield/ui/widgets/responsive_layout.dart';
 import 'package:scamshield/ui/widgets/risk_meter.dart';
 import 'package:scamshield/ui/widgets/section_card.dart';
 import 'package:scamshield/ui/widgets/stage_track.dart';
@@ -113,9 +114,9 @@ class _LiveGuardScreenState extends ConsumerState<LiveGuardScreen> {
       }
     }
 
-    return Scaffold(
+    return ResponsiveLayout(
       appBar: AppBar(title: Text(s.liveGuardBtn)),
-      body: SafeArea(
+      child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.screenPadding,
@@ -153,17 +154,24 @@ class _LiveGuardScreenState extends ConsumerState<LiveGuardScreen> {
                 SectionCard(
                   child: Row(
                     children: [
-                      const Icon(
-                        Icons.volume_up_outlined,
-                        color: AppColors.ink,
-                        size: 24,
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.accent.withValues(alpha: 0.15),
+                          borderRadius: AppRadius.border8,
+                        ),
+                        child: const Icon(
+                          Icons.volume_up_rounded,
+                          color: AppColors.accent,
+                          size: 24,
+                        ),
                       ),
                       const SizedBox(width: AppSpacing.s12),
                       Expanded(
                         child: Text(
                           s.liveInstruction,
                           style: AppTypography.bodyStrong.copyWith(
-                            fontSize: 18,
+                            fontSize: 16,
                           ),
                         ),
                       ),
@@ -172,28 +180,40 @@ class _LiveGuardScreenState extends ConsumerState<LiveGuardScreen> {
                 ),
                 const SizedBox(height: AppSpacing.s12),
 
-                // Listening indicator: ink dot + timer
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 10,
-                      height: 10,
-                      decoration: const BoxDecoration(
-                        color: AppColors.ink,
-                        shape: BoxShape.circle,
+                // Listening indicator: glowing emerald dot + timer
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 10,
+                        height: 10,
+                        decoration: const BoxDecoration(
+                          color: AppColors.accent,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.accent,
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: AppSpacing.s8),
-                    Text(
-                      '${s.liveListening} · ${_formatTime(_secondsElapsed)}',
-                      style: AppTypography.bodyStrong.copyWith(
-                        color: AppColors.ink,
+                      const SizedBox(width: AppSpacing.s8),
+                      Text(
+                        '${s.liveListening} · ${_formatTime(_secondsElapsed)}',
+                        style: AppTypography.bodyStrong.copyWith(
+                          color: AppColors.accent,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                const SizedBox(height: AppSpacing.s16),
+                const SizedBox(height: AppSpacing.s12),
 
                 // On HIGH: Banner slides in
                 if (risk.level == RiskLevel.high) ...[
@@ -212,23 +232,25 @@ class _LiveGuardScreenState extends ConsumerState<LiveGuardScreen> {
                 // Last 3 transcript lines
                 Expanded(
                   child: Container(
-                    padding: const EdgeInsets.all(AppSpacing.s12),
+                    padding: const EdgeInsets.all(AppSpacing.s16),
                     decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: AppRadius.border12,
-                      border: Border.all(color: AppColors.line, width: 1.5),
+                      color: AppColors.cardSurface,
+                      borderRadius: AppRadius.border16,
+                      border: Border.all(color: AppColors.line),
                     ),
                     child: lastSegments.isEmpty
                         ? Center(
                             child: Text(
                               s.listeningStatus,
-                              style: AppTypography.caption,
+                              style: AppTypography.caption.copyWith(
+                                color: AppColors.inkMuted,
+                              ),
                             ),
                           )
                         : ListView.separated(
                             itemCount: lastSegments.length,
                             separatorBuilder: (context, index) =>
-                                const Divider(),
+                                const Divider(color: AppColors.line),
                             itemBuilder: (context, index) {
                               final seg = lastSegments[index];
                               return Padding(
@@ -237,7 +259,10 @@ class _LiveGuardScreenState extends ConsumerState<LiveGuardScreen> {
                                 ),
                                 child: Text(
                                   seg.text,
-                                  style: AppTypography.body,
+                                  style: AppTypography.body.copyWith(
+                                    color: AppColors.ink,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               );
                             },

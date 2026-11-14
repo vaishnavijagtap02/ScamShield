@@ -29,7 +29,7 @@ class SettingsController extends Notifier<SettingsState> {
     try {
       final store = _store;
       final langStr = store.getLanguage();
-      final lang = langStr == 'hi_dev' ? AppLanguage.hiDev : AppLanguage.hiLat;
+      final lang = AppLanguageX.fromCode(langStr);
       return SettingsState(language: lang);
     } on Object {
       return const SettingsState();
@@ -40,18 +40,15 @@ class SettingsController extends Notifier<SettingsState> {
     state = state.copyWith(language: language);
     try {
       final store = _store;
-      await store.setLanguage(
-        language == AppLanguage.hiDev ? 'hi_dev' : 'hi_lat',
-      );
+      await store.setLanguage(language.code);
     } on Object {
       // Standalone mode
     }
   }
 
   Future<void> toggleLanguage() async {
-    final newLang = state.language == AppLanguage.hiLat
-        ? AppLanguage.hiDev
-        : AppLanguage.hiLat;
-    await setLanguage(newLang);
+    const values = AppLanguage.values;
+    final nextIndex = (values.indexOf(state.language) + 1) % values.length;
+    await setLanguage(values[nextIndex]);
   }
 }

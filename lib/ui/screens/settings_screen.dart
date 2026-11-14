@@ -31,6 +31,49 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     super.dispose();
   }
 
+  Widget _buildLanguagePill({
+    required AppLanguage targetLang,
+    required AppLanguage currentLang,
+    required VoidCallback onTap,
+  }) {
+    final isSelected = targetLang == currentLang;
+
+    return OutlinedButton(
+      onPressed: onTap,
+      style: OutlinedButton.styleFrom(
+        backgroundColor: isSelected
+            ? AppColors.accent.withValues(alpha: 0.15)
+            : AppColors.elevatedSurface,
+        side: BorderSide(
+          color: isSelected ? AppColors.accent : AppColors.line,
+          width: isSelected ? 1.5 : 1,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.border12),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            targetLang.nativeName,
+            style: AppTypography.bodyStrong.copyWith(
+              color: isSelected ? AppColors.accent : AppColors.ink,
+              fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+              fontSize: 16,
+            ),
+          ),
+          Text(
+            targetLang.displayName,
+            style: AppTypography.caption.copyWith(
+              color: isSelected ? AppColors.accent : AppColors.inkMuted,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsControllerProvider);
@@ -54,13 +97,37 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      s.languageSetting,
-                      style: AppTypography.h2.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          s.languageSetting,
+                          style: AppTypography.h2.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.accent.withValues(alpha: 0.15),
+                            borderRadius: AppRadius.border8,
+                          ),
+                          child: Text(
+                            settings.language.nativeName,
+                            style: AppTypography.caption.copyWith(
+                              color: AppColors.accent,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: AppSpacing.s16),
+
+                    // Primary Bilingual Buttons (matches tests)
                     Row(
                       children: [
                         Expanded(
@@ -145,6 +212,83 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               ),
                             ),
                           ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.s16),
+
+                    Text(
+                      'More Indian Languages',
+                      style: AppTypography.caption.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.inkMuted,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.s12),
+
+                    // Multi-language Grid for regional languages
+                    GridView.count(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: AppSpacing.s12,
+                      mainAxisSpacing: AppSpacing.s12,
+                      childAspectRatio: 2.2,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        _buildLanguagePill(
+                          targetLang: AppLanguage.en,
+                          currentLang: settings.language,
+                          onTap: () async {
+                            await ref
+                                .read(settingsControllerProvider.notifier)
+                                .setLanguage(AppLanguage.en);
+                          },
+                        ),
+                        _buildLanguagePill(
+                          targetLang: AppLanguage.mr,
+                          currentLang: settings.language,
+                          onTap: () async {
+                            await ref
+                                .read(settingsControllerProvider.notifier)
+                                .setLanguage(AppLanguage.mr);
+                          },
+                        ),
+                        _buildLanguagePill(
+                          targetLang: AppLanguage.gu,
+                          currentLang: settings.language,
+                          onTap: () async {
+                            await ref
+                                .read(settingsControllerProvider.notifier)
+                                .setLanguage(AppLanguage.gu);
+                          },
+                        ),
+                        _buildLanguagePill(
+                          targetLang: AppLanguage.bn,
+                          currentLang: settings.language,
+                          onTap: () async {
+                            await ref
+                                .read(settingsControllerProvider.notifier)
+                                .setLanguage(AppLanguage.bn);
+                          },
+                        ),
+                        _buildLanguagePill(
+                          targetLang: AppLanguage.ta,
+                          currentLang: settings.language,
+                          onTap: () async {
+                            await ref
+                                .read(settingsControllerProvider.notifier)
+                                .setLanguage(AppLanguage.ta);
+                          },
+                        ),
+                        _buildLanguagePill(
+                          targetLang: AppLanguage.te,
+                          currentLang: settings.language,
+                          onTap: () async {
+                            await ref
+                                .read(settingsControllerProvider.notifier)
+                                .setLanguage(AppLanguage.te);
+                          },
                         ),
                       ],
                     ),

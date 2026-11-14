@@ -36,6 +36,113 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
   }
 
+  void _showLanguageSheet(BuildContext context, AppLanguage currentLang) {
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        backgroundColor: AppColors.elevatedSurface,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Select Language / भाषा चुनें',
+                    style: AppTypography.h2.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close_rounded),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Flexible(
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 2.2,
+                  shrinkWrap: true,
+                  children: AppLanguage.values.map((lang) {
+                    final isSelected = lang == currentLang;
+                    return Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          unawaited(
+                            ref
+                                .read(settingsControllerProvider.notifier)
+                                .setLanguage(lang),
+                          );
+                          Navigator.pop(context);
+                        },
+                        borderRadius: AppRadius.border12,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? AppColors.accent.withValues(alpha: 0.15)
+                                : AppColors.cardSurface,
+                            borderRadius: AppRadius.border12,
+                            border: Border.all(
+                              color: isSelected
+                                  ? AppColors.accent
+                                  : AppColors.line,
+                              width: isSelected ? 1.5 : 1,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                lang.nativeName,
+                                style: AppTypography.bodyStrong.copyWith(
+                                  color: isSelected
+                                      ? AppColors.accent
+                                      : AppColors.ink,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Text(
+                                lang.displayName,
+                                style: AppTypography.caption.copyWith(
+                                  color: isSelected
+                                      ? AppColors.accent
+                                      : AppColors.inkMuted,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsControllerProvider);
@@ -64,57 +171,60 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [AppColors.accent, Color(0xFF00B0FF)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: AppRadius.border12,
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.accent.withValues(alpha: 0.35),
-                              blurRadius: 12,
-                              offset: const Offset(0, 2),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [AppColors.accent, Color(0xFF00B0FF)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
-                          ],
+                            borderRadius: AppRadius.border12,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.accent.withValues(alpha: 0.35),
+                                blurRadius: 12,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.shield_rounded,
+                            color: Color(0xFF0A0D14),
+                            size: 24,
+                          ),
                         ),
-                        child: const Icon(
-                          Icons.shield_rounded,
-                          color: Color(0xFF0A0D14),
-                          size: 24,
+                        const SizedBox(width: AppSpacing.s8),
+                        Flexible(
+                          child: Text(
+                            s.homeTitle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.display.copyWith(
+                              fontSize: 26,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: AppSpacing.s12),
-                      Text(
-                        s.homeTitle,
-                        style: AppTypography.display.copyWith(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  const SizedBox(width: AppSpacing.s8),
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       // Language Toggle
                       Semantics(
                         button: true,
                         label: 'Change language',
                         child: OutlinedButton(
-                          onPressed: () {
-                            unawaited(
-                              ref
-                                  .read(settingsControllerProvider.notifier)
-                                  .toggleLanguage(),
-                            );
-                          },
+                          onPressed: () =>
+                              _showLanguageSheet(context, settings.language),
                           style: OutlinedButton.styleFrom(
                             backgroundColor: AppColors.elevatedSurface,
                             foregroundColor: AppColors.ink,
@@ -123,18 +233,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               borderRadius: AppRadius.border12,
                             ),
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 8,
+                              horizontal: 10,
+                              vertical: 6,
                             ),
-                            minimumSize: const Size(56, 44),
+                            minimumSize: const Size(44, 40),
                           ),
-                          child: Text(
-                            s.langToggle,
-                            style: AppTypography.label.copyWith(
-                              fontSize: 16,
-                              color: AppColors.accent,
-                              fontWeight: FontWeight.w700,
-                            ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.language_rounded,
+                                size: 16,
+                                color: AppColors.accent,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                s.langToggle,
+                                style: AppTypography.label.copyWith(
+                                  fontSize: 14,
+                                  color: AppColors.accent,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -150,7 +271,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           tooltip: 'Settings',
                           icon: const Icon(
                             Icons.settings_outlined,
-                            size: 24,
+                            size: 22,
                             color: AppColors.ink,
                           ),
                           onPressed: () => unawaited(context.push('/settings')),
